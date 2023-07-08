@@ -2,7 +2,8 @@ name: Build and Release Filter Lists
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
   schedule:
     - cron: "0 15 * * *"
@@ -37,12 +38,13 @@ jobs:
       - name: Create GitHub release
         id: create_release
         uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ env.TAG_NAME }}
           release_name: Automatic list generation
           draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Upload filter lists
         uses: actions/upload-artifact@v2
@@ -56,7 +58,7 @@ jobs:
           keep_latest: 2
           delete_tags: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Upload log files
         uses: actions/upload-artifact@v2
