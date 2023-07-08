@@ -34,15 +34,21 @@ jobs:
       - name: Generate tag name
         run: echo "TAG_NAME=$(date +%F-%H-%M)" >> $GITHUB_ENV
 
-      - name: Release filter lists
-        uses: softprops/action-gh-release@v1
-        with:
-          files: dist/*.dat
-          name: Automatic list generation
-          tag_name: ${{ env.TAG_NAME }}
-          body_path: release.md
+      - name: Create GitHub release
+        id: create_release
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          release_name: Automatic list generation
+          draft: false
+
+      - name: Upload filter lists
+        uses: actions/upload-artifact@v2
+        with:
+          name: Filter Lists
+          path: dist/
 
       - name: Delete older releases
         uses: dev-drprasad/delete-older-releases@v0.2.1
@@ -50,11 +56,4 @@ jobs:
           keep_latest: 2
           delete_tags: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload log files
-        uses: actions/upload-artifact@v2
-        with:
-          name: Logs
-          path: logs/*.log
-        if: always()
+          GITHUB_TOKEN: ${{ secrets
