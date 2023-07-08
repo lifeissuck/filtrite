@@ -1,5 +1,0 @@
-# uBlock Origin Barblock
-https://paulgb.github.io/BarbBlock/blacklists/ublock-origin.txt
-
-# Annoying ads
-https://xngqoc.com^
